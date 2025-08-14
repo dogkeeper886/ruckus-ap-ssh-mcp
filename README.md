@@ -55,9 +55,12 @@ Create a `.env` file in the project root:
 
 ```bash
 # Ruckus AP SSH Configuration
-AP_IP=192.168.1.100
-AP_USERNAME=YOUR_USERNAME
-AP_PASSWORD="YOUR_PASSWORD"
+AP_IP=192.168.6.162
+AP_USERNAME=admin
+AP_PASSWORD=your_password_here
+
+# Optional: Enable SSH debug logging
+# SSH_DEBUG=true
 ```
 
 **Required Variables:**
@@ -72,77 +75,36 @@ AP_PASSWORD="YOUR_PASSWORD"
 
 ⚠️ **Never commit credentials to version control!** 
 
-- Use `.env` files for local development
+- Use `.env` files for local development (prevents special character issues)
 - Use environment variables or secrets management for production
 - Add `.env` to your `.gitignore` file
-
-### Password Special Characters
-
-If your password contains special characters (`#`, `!`, `$`, `{`, `}`, `` ` ``, `"`, `\`, spaces):
-
-- **In `.env` files**: Always use quotes: `AP_PASSWORD="password#with!special"`
-- **In shell commands**: Use double quotes or escape characters
-- **Claude MCP setup**: Use wrapper script or `.env` file to avoid shell escaping issues
-
-Without proper handling, characters like `#` will truncate your password!
 
 ## Claude Code Integration
 
 Add to Claude Code as an MCP server:
 
-### Recommended: Local Node.js (avoids shell escaping issues)
+### Recommended: Using .env file (handles all special characters)
 
-1. Create a wrapper script:
 ```bash
-# Create run-mcp.sh
-cat > run-mcp.sh << 'EOF'
-#!/bin/bash
-export AP_IP=192.168.1.100
-export AP_USERNAME=YOUR_USERNAME
-export AP_PASSWORD="YOUR_PASSWORD"
-exec node dist/index.js
-EOF
-
-chmod +x run-mcp.sh
-```
-
-2. Add to Claude Code:
-```bash
-claude mcp add ruckus-ap-ssh -- ./run-mcp.sh
+# Using .env file automatically handles passwords with special characters
+claude mcp add ruckus-ap-ssh -- node dist/index.js
 ```
 
 ### Alternative: Docker with .env file
 
 ```bash
-# Method 1: Using .env file (safest for special characters)
+# Method 1: Using .env file (safest for all passwords)
 claude mcp add ruckus-ap-ssh -- docker run --rm -i \
   --env-file /path/to/your/.env \
   ruckus-ap-ssh-mcp
 
-# Method 2: Direct environment variables 
-# ⚠️ WARNING: Passwords with #, !, $, {, } need proper shell escaping
+# Method 2: Direct environment variables
 claude mcp add ruckus-ap-ssh -- docker run --rm -i \
   -e AP_IP=YOUR_AP_IP \
   -e AP_USERNAME=YOUR_USERNAME \
-  -e "AP_PASSWORD=YOUR_PASSWORD" \
+  -e AP_PASSWORD=YOUR_PASSWORD \
   ruckus-ap-ssh-mcp
 ```
-
-### Special Character Handling
-
-If your password contains special characters (`#`, `!`, `$`, `{`, `}`, `` ` ``, `"`, `\`, spaces):
-
-- **Recommended**: Use the wrapper script approach (safest)
-- **Docker + .env**: Use `.env` file with quoted passwords
-- **Direct command**: Escape properly:
-  ```bash
-  # Actual password: YOUR_PASSWORD
-  claude mcp add ruckus-ap-ssh -- docker run --rm -i \
-    -e AP_IP=192.168.1.100 \
-    -e AP_USERNAME=YOUR_USERNAME \
-    -e "AP_PASSWORD=YOUR_PASSWORD" \
-    ruckus-ap-ssh-mcp
-  ```
 
 ## MCP Tools
 
@@ -258,11 +220,10 @@ Tested and verified on:
 
 ### Debug Mode
 
-Enable debug logging by setting environment variable:
+Enable debug logging by setting environment variable in your `.env` file:
 
 ```bash
-export SSH_DEBUG=true
-npm start
+SSH_DEBUG=true
 ```
 
 ## License
