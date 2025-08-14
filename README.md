@@ -56,13 +56,13 @@ Create a `.env` file in the project root:
 ```bash
 # Ruckus AP SSH Configuration
 AP_IP=192.168.1.100
-AP_USERNAME=admin
-AP_PASSWORD=your_secure_password
+AP_USERNAME=YOUR_USERNAME
+AP_PASSWORD="YOUR_PASSWORD"
 ```
 
 **Required Variables:**
 - `AP_IP`: IP address of the Ruckus AP
-- `AP_USERNAME`: SSH username (typically "admin")
+- `AP_USERNAME`: SSH username
 - `AP_PASSWORD`: SSH password for the AP
 
 **Optional Variables:**
@@ -98,8 +98,8 @@ Add to Claude Code as an MCP server:
 cat > run-mcp.sh << 'EOF'
 #!/bin/bash
 export AP_IP=192.168.1.100
-export AP_USERNAME=admin
-export AP_PASSWORD="your_password_here"
+export AP_USERNAME=YOUR_USERNAME
+export AP_PASSWORD="YOUR_PASSWORD"
 exec node dist/index.js
 EOF
 
@@ -136,11 +136,11 @@ If your password contains special characters (`#`, `!`, `$`, `{`, `}`, `` ` ``, 
 - **Docker + .env**: Use `.env` file with quoted passwords
 - **Direct command**: Escape properly:
   ```bash
-  # For password: JL#E7%hD47okz{!7
+  # Actual password: YOUR_PASSWORD
   claude mcp add ruckus-ap-ssh -- docker run --rm -i \
     -e AP_IP=192.168.1.100 \
-    -e AP_USERNAME=admin \
-    -e "AP_PASSWORD=JL#E7%hD47okz{!7" \
+    -e AP_USERNAME=YOUR_USERNAME \
+    -e "AP_PASSWORD=YOUR_PASSWORD" \
     ruckus-ap-ssh-mcp
   ```
 
@@ -152,8 +152,8 @@ Returns AP serial number and model information extracted from the login banner:
 
 ```json
 {
-  "serial": "952443000155",
-  "model": "T670 Multimedia Hotzone Wireless AP"
+  "serial": "YOUR_SERIAL_NUMBER",
+  "model": "T670 Multimedia Hotzone Wireless"
 }
 ```
 
