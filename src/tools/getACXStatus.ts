@@ -1,4 +1,4 @@
-import { executeSSHCommand } from '../utils/dockerSSH.js';
+import { executeSSHCommand } from '../utils/sshClient.js';
 import type { ACXStatus } from '../types.js';
 
 function extractValue(text: string, key: string): string {

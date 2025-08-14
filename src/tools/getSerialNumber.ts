@@ -1,4 +1,4 @@
-import { executeSSHCommand } from '../utils/dockerSSH.js';
+import { executeSSHCommand } from '../utils/sshClient.js';
 import type { SerialInfo } from '../types.js';
 
 export async function getSerialNumber() {

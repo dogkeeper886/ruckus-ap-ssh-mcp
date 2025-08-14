@@ -1,8 +1,5 @@
 FROM node:18-alpine
 
-# Install Docker CLI for SSH container execution
-RUN apk add --no-cache docker-cli
-
 WORKDIR /app
 
 # Copy package files

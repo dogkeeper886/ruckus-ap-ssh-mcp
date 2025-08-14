@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { 
@@ -65,6 +68,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 });
 
 async function main() {
+  // Debug environment
+  console.error('MCP Server Debug - Working directory:', process.cwd());
+  console.error('MCP Server Debug - Environment variables:');
+  console.error('  AP_IP:', process.env.AP_IP);
+  console.error('  AP_USERNAME:', process.env.AP_USERNAME);
+  console.error('  AP_PASSWORD:', process.env.AP_PASSWORD ? '[SET]' : '[NOT SET]');
+  
   const transport = new StdioServerTransport();
   await server.connect(transport);
   console.error('Ruckus AP SSH MCP server started');
