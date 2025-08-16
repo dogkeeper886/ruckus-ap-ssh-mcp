@@ -30,3 +30,18 @@ export interface ExternalAntennaInfo {
     gain: string;
   };
 }
+
+export interface ClientAdmissionControlInfo {
+  wifi0: {
+    enabled: boolean;
+    radioLoadThreshold: number;
+    clientCountThreshold: number;
+    clientThroughputThreshold: number;
+  };
+  wifi1: {
+    enabled: boolean;
+    radioLoadThreshold: number;
+    clientCountThreshold: number;
+    clientThroughputThreshold: number;
+  };
+}

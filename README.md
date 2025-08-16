@@ -88,6 +88,27 @@ Returns external antenna configuration for both WiFi interfaces:
 }
 ```
 
+### getClientAdmissionControl
+
+Returns client admission control configuration for both WiFi interfaces:
+
+```json
+{
+  "wifi0": {
+    "enabled": false,
+    "radioLoadThreshold": 75,
+    "clientCountThreshold": 10,
+    "clientThroughputThreshold": 0.0
+  },
+  "wifi1": {
+    "enabled": false,
+    "radioLoadThreshold": 75,
+    "clientCountThreshold": 20,
+    "clientThroughputThreshold": 0.0
+  }
+}
+```
+
 ## Configuration
 
 ### Environment Variables
