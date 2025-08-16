@@ -11,6 +11,7 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { getSerialNumber } from './tools/getSerialNumber.js';
 import { getACXStatus } from './tools/getACXStatus.js';
+import { getExternalAntennaInfo } from './tools/getExternalAntennaInfo.js';
 
 const server = new Server({
   name: 'ruckus-ap-ssh-mcp',
@@ -40,6 +41,15 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         properties: {},
         required: []
       }
+    },
+    {
+      name: 'getExternalAntennaInfo',
+      description: 'Get external antenna mode and gain information for both WiFi interfaces',
+      inputSchema: {
+        type: 'object',
+        properties: {},
+        required: []
+      }
     }
   ]
 }));
@@ -53,6 +63,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return await getSerialNumber();
       case 'getACXStatus':
         return await getACXStatus();
+      case 'getExternalAntennaInfo':
+        return await getExternalAntennaInfo();
       default:
         throw new Error(`Unknown tool: ${name}`);
     }
