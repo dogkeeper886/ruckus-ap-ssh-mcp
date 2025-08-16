@@ -2,49 +2,90 @@
 
 Model Context Protocol (MCP) server for connecting to Ruckus Access Points via SSH to retrieve status and configuration information.
 
-## Features
+## Quick Start
 
-- **getSerialNumber**: Extract AP serial number and model from SSH banner
-- **getACXStatus**: Get ACX management status and connection details
-- Uses ssh2 library for reliable SSH connectivity
-- Interactive authentication handling for Ruckus AP CLI
-
-## Prerequisites
+### Prerequisites
 
 - Node.js 18+ installed
-- Docker installed and running (optional, for containerized deployment)
 - Ruckus AP with SSH access enabled
 - Valid SSH credentials for the AP
 
-## Installation
-
-### Local Development
+### Installation & Setup
 
 ```bash
-# Clone and setup
+# Clone the repository
+git clone https://github.com/your-username/ruckus-ap-ssh-mcp.git
+cd ruckus-ap-ssh-mcp
+
+# Install dependencies
 npm install
+
+# Build the project
 npm run build
 
 # Create .env file with your AP credentials
-cp .env.example .env
-# Edit .env with your actual credentials
-
-# Run MCP server
-npm start
+cat > .env << EOF
+AP_IP=192.168.6.162
+AP_USERNAME=admin
+AP_PASSWORD=your_password_here
+EOF
 ```
 
-### Docker Usage
+### Add to Claude Code
 
 ```bash
-# Build image
-docker build -t ruckus-ap-ssh-mcp .
+# Navigate to the project directory first
+cd /path/to/ruckus-ap-ssh-mcp
 
-# Run with environment variables
-docker run --rm -i \
-  -e AP_IP=YOUR_AP_IP \
-  -e AP_USERNAME=YOUR_USERNAME \
-  -e AP_PASSWORD=YOUR_PASSWORD \
-  ruckus-ap-ssh-mcp
+# Add to Claude Code (automatically uses .env file in current directory)
+claude mcp add ruckus-ap-ssh -- node dist/index.js
+```
+
+## Available Tools
+
+### getSerialNumber
+
+Returns AP serial number and model information:
+
+```json
+{
+  "serial": "YOUR_SERIAL_NUMBER",
+  "model": "T670 Multimedia Hotzone Wireless"
+}
+```
+
+### getACXStatus
+
+Returns ACX cloud management status:
+
+```json
+{
+  "serviceEnabled": true,
+  "managedByACX": true,
+  "state": "RUN",
+  "connectionStatus": "AP is approved by controller",
+  "serverList": "device.dev.ruckus.cloud",
+  "configUpdateState": "CONF_UPD_COMPLETE",
+  "heartbeatInterval": 30,
+  "certValidation": "success"
+}
+```
+
+### getExternalAntennaInfo
+
+Returns external antenna configuration for both WiFi interfaces:
+
+```json
+{
+  "wifi0": {
+    "mode": "Active",
+    "gain": "5 dBi"
+  },
+  "wifi1": {
+    "mode": "Active",
+    "gain": "5 dBi"
+  }
+}
 ```
 
 ## Configuration
@@ -54,7 +95,7 @@ docker run --rm -i \
 Create a `.env` file in the project root:
 
 ```bash
-# Ruckus AP SSH Configuration
+# Required: Ruckus AP SSH Configuration
 AP_IP=192.168.6.162
 AP_USERNAME=admin
 AP_PASSWORD=your_password_here
@@ -75,85 +116,58 @@ AP_PASSWORD=your_password_here
 
 ⚠️ **Never commit credentials to version control!** 
 
-- Use `.env` files for local development (prevents special character issues)
+- Use `.env` files for local development (handles special characters properly)
 - Use environment variables or secrets management for production
-- Add `.env` to your `.gitignore` file
+- The `.env` file is already in `.gitignore`
 
-## Claude Code Integration
-
-Add to Claude Code as an MCP server:
-
-### Recommended: Using .env file (handles all special characters)
+## Docker Usage (Alternative)
 
 ```bash
-# Using .env file automatically handles passwords with special characters
-claude mcp add ruckus-ap-ssh -- node dist/index.js
+# Build image
+docker build -t ruckus-ap-ssh-mcp .
+
+# Run with .env file
+docker run --rm -i --env-file .env ruckus-ap-ssh-mcp
+
+# Add to Claude Code with Docker
+claude mcp add ruckus-ap-ssh -- docker run --rm -i --env-file /path/to/.env ruckus-ap-ssh-mcp
 ```
 
-### Alternative: Docker with .env file
+## Supported Ruckus Models
+
+Tested and verified on:
+- T350SE Multimedia Hotzone Wireless AP
+- Should work with other Ruckus AP models using rkscli
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Authentication Failed**
+   - Verify credentials in `.env` file
+   - Check AP SSH access is enabled
+   - Ensure IP address is reachable
+
+2. **Connection Timeout**
+   - Check network connectivity to AP
+   - Verify AP is responding on SSH port 22
+   - Test with: `ssh admin@YOUR_AP_IP`
+
+3. **Command Not Found**
+   - Verify AP model supports the rkscli command
+   - Check firmware version compatibility
+
+### Debug Mode
+
+Enable debug logging in your `.env` file:
 
 ```bash
-# Method 1: Using .env file (safest for all passwords)
-claude mcp add ruckus-ap-ssh -- docker run --rm -i \
-  --env-file /path/to/your/.env \
-  ruckus-ap-ssh-mcp
-
-# Method 2: Direct environment variables
-claude mcp add ruckus-ap-ssh -- docker run --rm -i \
-  -e AP_IP=YOUR_AP_IP \
-  -e AP_USERNAME=YOUR_USERNAME \
-  -e AP_PASSWORD=YOUR_PASSWORD \
-  ruckus-ap-ssh-mcp
+SSH_DEBUG=true
 ```
-
-## MCP Tools
-
-### getSerialNumber
-
-Returns AP serial number and model information extracted from the login banner:
-
-```json
-{
-  "serial": "YOUR_SERIAL_NUMBER",
-  "model": "T670 Multimedia Hotzone Wireless"
-}
-```
-
-### getACXStatus
-
-Returns comprehensive ACX cloud management status:
-
-```json
-{
-  "serviceEnabled": true,
-  "managedByACX": true,
-  "state": "RUN",
-  "connectionStatus": "AP is approved by controller",
-  "serverList": "device.dev.ruckus.cloud",
-  "configUpdateState": "CONF_UPD_COMPLETE",
-  "heartbeatInterval": 30,
-  "certValidation": "success"
-}
-```
-
-## Authentication Flow
-
-The server handles Ruckus AP's interactive SSH authentication:
-
-1. **Connect** to AP via SSH
-2. **Login prompt**: "Please login:" → Send username + Enter
-3. **Password prompt**: "password :" → Send password + Enter  
-4. **Shell ready**: "rkscli:" → Execute commands
-
-## Architecture
-
-- **TypeScript/Node.js** with MCP SDK
-- **ssh2 library** for reliable SSH connectivity
-- **Interactive authentication** handling for Ruckus CLI
-- **JSON structured output** from command parsing
-- **Error handling** and connection management
 
 ## Development
+
+### Development Setup
 
 ```bash
 # Development mode with auto-reload
@@ -162,15 +176,11 @@ npm run dev
 # Build TypeScript
 npm run build
 
-# Test individual functions
-node -e "
-import('./dist/utils/sshClient.js').then(m => {
-  m.executeSSHCommand('get info').then(console.log);
-});
-"
+# Run tests
+npm test
 ```
 
-### Testing
+### Testing Connection
 
 Create a test script to verify connectivity:
 
@@ -194,37 +204,24 @@ async function test() {
 test();
 ```
 
-## Supported Ruckus Models
+Run with: `node test-connection.js`
 
-Tested and verified on:
-- T670 Multimedia Hotzone Wireless AP
-- Should work with other Ruckus AP models using rkscli
+### Architecture
 
-## Troubleshooting
+- **TypeScript/Node.js** with MCP SDK
+- **ssh2 library** for reliable SSH connectivity
+- **Interactive authentication** handling for Ruckus CLI
+- **JSON structured output** from command parsing
+- **Error handling** and connection management
 
-### Common Issues
+### Authentication Flow
 
-1. **Authentication Failed**
-   - Verify credentials in `.env` file
-   - Check AP SSH access is enabled
-   - Ensure IP address is reachable
+The server handles Ruckus AP's interactive SSH authentication:
 
-2. **Connection Timeout**
-   - Check network connectivity to AP
-   - Verify AP is responding on SSH port 22
-   - Increase timeout in ssh2 connection settings
-
-3. **Command Not Found**
-   - Verify AP model supports the rkscli command
-   - Check firmware version compatibility
-
-### Debug Mode
-
-Enable debug logging by setting environment variable in your `.env` file:
-
-```bash
-SSH_DEBUG=true
-```
+1. **Connect** to AP via SSH
+2. **Login prompt**: "Please login:" → Send username + Enter
+3. **Password prompt**: "password :" → Send password + Enter  
+4. **Shell ready**: "rkscli:" → Execute commands
 
 ## License
 
