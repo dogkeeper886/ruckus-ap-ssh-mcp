@@ -45,3 +45,16 @@ export interface ClientAdmissionControlInfo {
     clientThroughputThreshold: number;
   };
 }
+
+export interface WiFiChannelInfo {
+  wifi0: {
+    radioEnabled: boolean;
+    channel: number | null;
+    status: string;
+  };
+  wifi1: {
+    radioEnabled: boolean;
+    channel: number | null;
+    status: string;
+  };
+}

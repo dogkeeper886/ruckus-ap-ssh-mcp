@@ -13,6 +13,7 @@ import { getSerialNumber } from './tools/getSerialNumber.js';
 import { getACXStatus } from './tools/getACXStatus.js';
 import { getExternalAntennaInfo } from './tools/getExternalAntennaInfo.js';
 import { getClientAdmissionControl } from './tools/getClientAdmissionControl.js';
+import { getWiFiChannelInfo } from './tools/getWiFiChannelInfo.js';
 
 const server = new Server({
   name: 'ruckus-ap-ssh-mcp',
@@ -60,6 +61,15 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         properties: {},
         required: []
       }
+    },
+    {
+      name: 'getWiFiChannelInfo',
+      description: 'Get WiFi channel information for both interfaces (wifi0 and wifi1)',
+      inputSchema: {
+        type: 'object',
+        properties: {},
+        required: []
+      }
     }
   ]
 }));
@@ -77,6 +87,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return await getExternalAntennaInfo();
       case 'getClientAdmissionControl':
         return await getClientAdmissionControl();
+      case 'getWiFiChannelInfo':
+        return await getWiFiChannelInfo();
       default:
         throw new Error(`Unknown tool: ${name}`);
     }
