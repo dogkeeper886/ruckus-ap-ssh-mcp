@@ -1,7 +1,7 @@
 import { executeSSHCommand } from '../utils/sshClient.js';
 import type { WiFiChannelInfo } from '../types.js';
 
-function parseChannelInfo(output: string, interfaceName: string): WiFiChannelInfo['wifi0'] | WiFiChannelInfo['wifi1'] {
+function parseChannelInfo(output: string): WiFiChannelInfo['wifi0'] | WiFiChannelInfo['wifi1'] {
   // Check for radio off status
   if (output.includes('Radio Off')) {
     return {
@@ -59,9 +59,20 @@ export async function getWiFiChannelInfo() {
     
     // Parse the responses
     const channelInfo: WiFiChannelInfo = {
-      wifi0: parseChannelInfo(wifi0Output, 'wifi0'),
-      wifi1: parseChannelInfo(wifi1Output, 'wifi1')
+      wifi0: parseChannelInfo(wifi0Output),
+      wifi1: parseChannelInfo(wifi1Output)
     };
+    
+    // Validate that we got some meaningful response
+    if (!wifi0Output && !wifi1Output) {
+      throw new Error('No output received from channel commands');
+    }
+    
+    // Validate that at least one interface returned a valid status
+    if (channelInfo.wifi0.status === 'Unknown status' && 
+        channelInfo.wifi1.status === 'Unknown status') {
+      throw new Error('Unable to parse channel information from either interface');
+    }
     
     return {
       content: [{
