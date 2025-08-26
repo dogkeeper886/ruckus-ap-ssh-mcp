@@ -51,10 +51,18 @@ export interface WiFiChannelInfo {
     radioEnabled: boolean;
     channel: number | null;
     status: string;
+    band?: string; // 2.4GHz
   };
   wifi1: {
     radioEnabled: boolean;
     channel: number | null;
     status: string;
+    band?: string; // 5GHz
+  };
+  wifi2?: {
+    radioEnabled: boolean;
+    channel: number | null;
+    status: string;
+    band?: string; // 6GHz or second 5GHz
   };
 }
