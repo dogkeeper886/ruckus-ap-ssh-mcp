@@ -74,7 +74,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     },
     {
       name: 'getWiFiChannelInfo',
-      description: 'Get WiFi channel information for all interfaces (wifi0: 2.4GHz, wifi1: 5GHz, wifi2: 6GHz or second 5GHz if available)',
+      description: 'Get WiFi channel information for all interfaces with frequency-based band detection (wifi0: 2.4GHz, wifi1: 5GHz, wifi2: 5GHz/6GHz based on MHz)',
       inputSchema: {
         type: 'object',
         properties: {},

@@ -109,6 +109,39 @@ Returns client admission control configuration for both WiFi interfaces:
 }
 ```
 
+### getWiFiChannelInfo
+
+Returns WiFi channel and frequency information for all available interfaces with frequency-based band detection:
+
+```json
+{
+  "wifi0": {
+    "radioEnabled": true,
+    "channel": 4,
+    "status": "OK",
+    "band": "2.4GHz"
+  },
+  "wifi1": {
+    "radioEnabled": true,
+    "channel": 52,
+    "status": "OK", 
+    "band": "5GHz"
+  },
+  "wifi2": {
+    "radioEnabled": true,
+    "channel": 116,
+    "status": "OK",
+    "band": "5GHz"
+  }
+}
+```
+
+**Features:**
+- **Frequency-based band detection**: Uses MHz frequency from rkscli output to accurately distinguish 5GHz vs 6GHz
+- **Frequency ranges**: 2400-2500MHz=2.4GHz, 5000-5900MHz=5GHz, 5925-7125MHz=6GHz
+- **Backwards compatible**: Works with APs that don't have wifi2 interface
+- **Fallback logic**: Falls back to interface-based detection if frequency parsing fails
+
 ## Configuration
 
 ### Environment Variables
@@ -177,11 +210,11 @@ AP_PASSWORD='password#with!special$chars'
 Add the Docker-based MCP server to Claude Code:
 
 ```bash
-# Method 1: Using .env file (recommended)
+# Method 1: Full docker command with env-file (recommended)
 # Navigate to your project directory containing .env
 cd /path/to/ruckus-ap-ssh-mcp
 
-# Add to Claude Code with env-file
+# Add using full docker command with env-file
 claude mcp add ruckus-ap-ssh -- docker run --rm -i --env-file .env ruckus-ap-ssh-mcp
 
 # Method 2: Direct environment variables (less secure)
@@ -191,6 +224,8 @@ claude mcp add ruckus-ap-ssh -- docker run --rm -i \
   -e AP_PASSWORD="your_password_here" \
   ruckus-ap-ssh-mcp
 ```
+
+**Recommended**: Use Method 1 with `--env-file .env` for the simplest setup - it automatically uses your local `.env` file and handles the Docker execution.
 
 ### Integration with Cursor
 

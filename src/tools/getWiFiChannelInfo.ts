@@ -27,22 +27,37 @@ function parseChannelInfo(output: string, interfaceName: string): WifiInterfaceI
     };
   }
   
-  // Parse the channel number if radio is on
-  // Expected format: "Channel: X" or similar
-  const channelMatch = output.match(/Channel[:\s]+(\d+)/i);
+  // Parse the channel number and frequency if radio is on
+  // Expected format: "Channel: X (Y Mhz)" or "Channel: X"
+  const channelMatch = output.match(/Channel[:\s]+(\d+)(?:\s*\((\d+)\s*Mhz\))?/i);
   
   if (channelMatch) {
     const channel = parseInt(channelMatch[1], 10);
-    // Determine band based on channel number
+    const frequency = channelMatch[2] ? parseInt(channelMatch[2], 10) : null;
+    
+    // Determine band based on frequency (preferred) or interface/channel fallback
     let band: string | undefined;
-    if (interfaceName === 'wifi0') {
-      band = '2.4GHz';
-    } else if (interfaceName === 'wifi1') {
-      band = '5GHz';
-    } else if (interfaceName === 'wifi2') {
-      // Channel 1-233 are 6GHz channels in WiFi 6E/7
-      // Channels in 5GHz range would indicate second 5GHz radio
-      band = channel >= 1 && channel <= 233 ? '6GHz' : '5GHz (second radio)';
+    if (frequency) {
+      // Use frequency to determine band accurately
+      if (frequency >= 2400 && frequency <= 2500) {
+        band = '2.4GHz';
+      } else if (frequency >= 5000 && frequency <= 5900) {
+        band = '5GHz';
+      } else if (frequency >= 5925 && frequency <= 7125) {
+        band = '6GHz';
+      } else {
+        band = 'Unknown';
+      }
+    } else {
+      // Fallback to interface-based detection
+      if (interfaceName === 'wifi0') {
+        band = '2.4GHz';
+      } else if (interfaceName === 'wifi1') {
+        band = '5GHz';
+      } else if (interfaceName === 'wifi2') {
+        // Without frequency, assume it's likely 6GHz but could be second 5GHz
+        band = '5GHz/6GHz';
+      }
     }
     
     return {
