@@ -9,8 +9,7 @@ RUN npm ci --only=production
 # Copy built JavaScript files
 COPY dist/ ./dist/
 
-# Copy .env file to container root for fallback path resolution (optional)
-COPY .env* ./
+# .env file will be provided at runtime via MCP command
 
 # Set environment variables with defaults
 ENV AP_IP=""

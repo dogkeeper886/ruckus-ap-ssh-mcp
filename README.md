@@ -14,7 +14,7 @@ Model Context Protocol (MCP) server for connecting to Ruckus Access Points via S
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/ruckus-ap-ssh-mcp.git
+git clone https://github.com/dogkeeper886/ruckus-ap-ssh-mcp.git
 cd ruckus-ap-ssh-mcp
 
 # Install dependencies
@@ -195,11 +195,10 @@ AP_IP=192.168.6.162
 AP_USERNAME=admin
 
 # CRITICAL: Password escaping for special characters
-# If your password contains: # ! $ ` \ " or spaces
-# You MUST use quotes in .env files:
-AP_PASSWORD="password#with!special$chars"
-# or
-AP_PASSWORD='password#with!special$chars'
+# Docker: Use WITHOUT quotes (quotes become part of password)
+AP_PASSWORD=password#with!special$chars
+# npm run (source): Use WITH quotes to protect special characters  
+# AP_PASSWORD="password#with!special$chars"
 
 # Optional: Enable SSH debug logging
 # SSH_DEBUG=true
@@ -210,22 +209,18 @@ AP_PASSWORD='password#with!special$chars'
 Add the Docker-based MCP server to Claude Code:
 
 ```bash
-# Method 1: Full docker command with env-file (recommended)
+# Method 1: Using default .env file (recommended)
 # Navigate to your project directory containing .env
 cd /path/to/ruckus-ap-ssh-mcp
 
 # Add using full docker command with env-file
 claude mcp add ruckus-ap-ssh -- docker run --rm -i --env-file .env ruckus-ap-ssh-mcp
 
-# Method 2: Direct environment variables (less secure)
-claude mcp add ruckus-ap-ssh -- docker run --rm -i \
-  -e AP_IP=192.168.6.162 \
-  -e AP_USERNAME=admin \
-  -e AP_PASSWORD="your_password_here" \
-  ruckus-ap-ssh-mcp
+# Method 2: Using custom env file (e.g., for different environments)
+claude mcp add ruckus-ap-ssh -- docker run --rm -i --env-file .env.runtime ruckus-ap-ssh-mcp
 ```
 
-**Recommended**: Use Method 1 with `--env-file .env` for the simplest setup - it automatically uses your local `.env` file and handles the Docker execution.
+**Recommended**: Use Method 1 with `--env-file .env` for the simplest setup. Use Method 2 with `.env.runtime` for different environments or when you want to separate runtime configs from development configs.
 
 ### Integration with Cursor
 
@@ -258,8 +253,8 @@ For Cursor IDE, add the MCP server configuration to your `settings.json`:
 
 1. **Use .env files** (recommended):
    ```bash
-   # In .env file - quotes handle special characters
-   AP_PASSWORD="myP@ssw0rd#123"
+   # In .env file for Docker - NO quotes (quotes become part of password)
+   AP_PASSWORD=myP@ssw0rd#123
    
    # Run with env-file
    docker run --rm -i --env-file .env ruckus-ap-ssh-mcp
@@ -274,14 +269,13 @@ For Cursor IDE, add the MCP server configuration to your `settings.json`:
    docker run --env-file .env ruckus-ap-ssh-mcp
    ```
 
-3. **Special characters require quotes in .env**:
+3. **Docker vs Source execution differences**:
    ```bash
-   # ❌ Will fail - # starts comment
+   # For Docker (.env file) - NO quotes
    AP_PASSWORD=pass#word
    
-   # ✅ Works - quotes preserve special chars
+   # For npm run source (.env file) - USE quotes
    AP_PASSWORD="pass#word"
-   AP_PASSWORD='pass#word'
    ```
 
 ### Testing Docker Integration
