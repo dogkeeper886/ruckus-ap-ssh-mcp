@@ -1,7 +1,17 @@
 #!/usr/bin/env node
 
 import dotenv from 'dotenv';
-dotenv.config();
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+// Get the directory of the current script
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Look for .env file in the project root (one level up from src, or current dir for Docker)
+dotenv.config({ path: join(__dirname, '..', '.env') });
+// Fallback for Docker container where .env might be in the same directory as dist
+dotenv.config({ path: join(__dirname, '.env') });
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
@@ -104,16 +114,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 });
 
 async function main() {
-  // Debug environment
-  console.error('MCP Server Debug - Working directory:', process.cwd());
-  console.error('MCP Server Debug - Environment variables:');
-  console.error('  AP_IP:', process.env.AP_IP);
-  console.error('  AP_USERNAME:', process.env.AP_USERNAME);
-  console.error('  AP_PASSWORD:', process.env.AP_PASSWORD ? '[SET]' : '[NOT SET]');
-  
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error('Ruckus AP SSH MCP server started');
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

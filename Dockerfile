@@ -9,6 +9,9 @@ RUN npm ci --only=production
 # Copy built JavaScript files
 COPY dist/ ./dist/
 
+# Copy .env file to container root for fallback path resolution (optional)
+COPY .env* ./
+
 # Set environment variables with defaults
 ENV AP_IP=""
 ENV AP_USERNAME="super"
