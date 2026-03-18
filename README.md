@@ -34,11 +34,12 @@ EOF
 ### Add to Claude Code
 
 ```bash
-# Navigate to the project directory first
-cd /path/to/ruckus-ap-ssh-mcp
-
-# Add to Claude Code (automatically uses .env file in current directory)
-claude mcp add ruckus-ap-ssh -- node dist/index.js
+# Add to Claude Code with env vars (no .env file needed)
+claude mcp add ruckus-ap-ssh -s user \
+  -e AP_IP=192.168.x.x \
+  -e AP_USERNAME=admin \
+  -e 'AP_PASSWORD=your_password_here' \
+  -- node /path/to/ruckus-ap-ssh-mcp/dist/index.js
 ```
 
 ## Available Tools
