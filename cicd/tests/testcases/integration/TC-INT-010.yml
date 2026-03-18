@@ -1,0 +1,30 @@
+# Test: getWlanScheduler returns weekly schedule per WLAN
+id: TC-INT-010
+name: Get WLAN scheduler configuration
+suite: integration
+story: STORY-008
+priority: 7
+timeout: 30000
+dependencies: []
+
+steps:
+  - name: Call getWlanScheduler
+    command: npx tsx cicd/tests/src/mcp-client.ts getWlanScheduler
+    expectPatterns:
+      - "wlan"
+      - "profileId"
+      - "timezone"
+      - "schedule"
+      - "Sun"
+      - "Mon"
+    rejectPatterns:
+      - "Error getting WLAN scheduler"
+      - "isError"
+
+criteria: |
+  Verify getWlanScheduler returns structured JSON with:
+  - At least one WLAN entry
+  - Each entry has profileId, timezone, and schedule object
+  - Schedule contains all 7 days (Sun-Sat)
+  - Each day has hourly entries with on/off status
+  - No error responses

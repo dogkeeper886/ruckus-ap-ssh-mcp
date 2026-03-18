@@ -26,6 +26,7 @@ import { getClientAdmissionControl } from './tools/getClientAdmissionControl.js'
 import { getWiFiChannelInfo } from './tools/getWiFiChannelInfo.js';
 import { runCommand } from './tools/runCommand.js';
 import { getWlanInfo } from './tools/getWlanInfo.js';
+import { getWlanScheduler } from './tools/getWlanScheduler.js';
 
 const server = new Server({
   name: 'ruckus-ap-ssh-mcp',
@@ -93,6 +94,15 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       }
     },
     {
+      name: 'getWlanScheduler',
+      description: 'Get WLAN scheduler configuration showing weekly operating hours for all WLANs (hex-decoded: F=fully on, 0=off, per 15-min quarter)',
+      inputSchema: {
+        type: 'object',
+        properties: {},
+        required: []
+      }
+    },
+    {
       name: 'runCommand',
       description: 'Execute an arbitrary rkscli command on the Ruckus AP via SSH and return raw output',
       inputSchema: {
@@ -126,6 +136,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return await getWiFiChannelInfo();
       case 'getWlanInfo':
         return await getWlanInfo();
+      case 'getWlanScheduler':
+        return await getWlanScheduler();
       case 'runCommand':
         return await runCommand((request.params.arguments as { command?: string })?.command || '');
       default:

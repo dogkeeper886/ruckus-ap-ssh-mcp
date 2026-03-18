@@ -80,3 +80,25 @@ export interface WlanInterfaceInfo {
 export interface WlanInfo {
   [wlanName: string]: WlanInterfaceInfo;
 }
+
+export interface DaySchedule {
+  [hour: string]: string;
+}
+
+export interface WlanScheduleEntry {
+  profileId: number | null;
+  timezone: string;
+  schedule: {
+    Sun: DaySchedule;
+    Mon: DaySchedule;
+    Tue: DaySchedule;
+    Wed: DaySchedule;
+    Thu: DaySchedule;
+    Fri: DaySchedule;
+    Sat: DaySchedule;
+  };
+}
+
+export interface WlanSchedulerInfo {
+  [wlanName: string]: WlanScheduleEntry;
+}
