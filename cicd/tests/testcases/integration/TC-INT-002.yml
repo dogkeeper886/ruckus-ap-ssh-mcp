@@ -1,0 +1,21 @@
+# Test: runCommand with empty command
+id: TC-INT-002
+name: Run empty command returns login banner
+suite: integration
+story: STORY-006
+priority: 2
+timeout: 30000
+dependencies: []
+
+steps:
+  - name: Execute empty command via runCommand
+    command: npx tsx cicd/tests/src/mcp-client.ts runCommand '{"command":""}'
+    expectPatterns:
+      - "Ruckus"
+    rejectPatterns:
+      - "Unknown tool"
+
+criteria: |
+  Verify runCommand handles empty command gracefully:
+  - Returns login banner containing "Ruckus" model info
+  - Does not crash or return a tool-level error

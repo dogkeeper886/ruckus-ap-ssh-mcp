@@ -31,4 +31,4 @@ Add a generic `runCommand` MCP tool that accepts a command string, executes it o
 
 - Created: 2026-03-18
 - Tasks: #1, #2
-- Tests: none
+- Tests: TC-INT-001, TC-INT-002, TC-INT-003

@@ -1,0 +1,40 @@
+# Test: runCommand with valid rkscli commands
+id: TC-INT-001
+name: Run valid rkscli commands on AP
+suite: integration
+story: STORY-006
+priority: 1
+timeout: 30000
+dependencies: []
+
+steps:
+  - name: Execute 'get devicename' via runCommand
+    command: npx tsx cicd/tests/src/mcp-client.ts runCommand '{"command":"get devicename"}'
+    expectPatterns:
+      - "devicename"
+    rejectPatterns:
+      - "Unknown tool"
+      - "Error executing"
+
+  - name: Execute 'get boarddata' via runCommand
+    command: npx tsx cicd/tests/src/mcp-client.ts runCommand '{"command":"get boarddata"}'
+    expectPatterns:
+      - "Board"
+    rejectPatterns:
+      - "Unknown tool"
+      - "Error executing"
+
+  - name: Execute 'get wlanlist' via runCommand
+    command: npx tsx cicd/tests/src/mcp-client.ts runCommand '{"command":"get wlanlist"}'
+    expectPatterns:
+      - "wlan"
+    rejectPatterns:
+      - "Unknown tool"
+      - "Error executing"
+
+criteria: |
+  Verify runCommand can execute valid rkscli commands:
+  - 'get devicename' returns output containing device name
+  - 'get boarddata' returns board hardware info
+  - 'get wlanlist' returns WLAN configuration list
+  - No tool-level errors on any command

@@ -1,0 +1,22 @@
+# Test: runCommand with invalid command
+id: TC-INT-003
+name: Run invalid command handles gracefully
+suite: integration
+story: STORY-006
+priority: 3
+timeout: 30000
+dependencies: []
+
+steps:
+  - name: Execute invalid command via runCommand
+    command: npx tsx cicd/tests/src/mcp-client.ts runCommand '{"command":"invalid_command_xyz"}'
+    expectPatterns:
+      - "."
+    rejectPatterns:
+      - "Unknown tool"
+
+criteria: |
+  Verify runCommand handles invalid commands gracefully:
+  - Does not crash the MCP server
+  - Returns some output (AP error message or empty response)
+  - Does not return "Unknown tool" (tool itself must be recognized)
