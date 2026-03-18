@@ -28,4 +28,4 @@ Provide an MCP tool that queries both WiFi interfaces on a Ruckus AP for externa
 - Created: 2026-03-18
 - Implemented: yes
 - Tasks: none
-- Tests: none
+- Tests: TC-INT-006

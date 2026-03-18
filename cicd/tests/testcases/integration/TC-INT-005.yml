@@ -1,0 +1,27 @@
+# Test: getACXStatus returns management status
+id: TC-INT-005
+name: Get ACX management status
+suite: integration
+story: STORY-002
+priority: 2
+timeout: 30000
+dependencies: []
+
+steps:
+  - name: Call getACXStatus
+    command: npx tsx cicd/tests/src/mcp-client.ts getACXStatus
+    expectPatterns:
+      - "serviceEnabled"
+      - "state"
+      - "connectionStatus"
+      - "heartbeatInterval"
+    rejectPatterns:
+      - "Error getting ACX status"
+      - "isError"
+
+criteria: |
+  Verify getACXStatus returns structured JSON with:
+  - serviceEnabled boolean
+  - state, connectionStatus, serverList fields
+  - heartbeatInterval number
+  - No error responses

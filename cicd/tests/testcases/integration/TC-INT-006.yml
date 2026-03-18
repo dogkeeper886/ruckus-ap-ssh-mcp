@@ -1,0 +1,22 @@
+# Test: getExternalAntennaInfo returns antenna config or graceful error
+id: TC-INT-006
+name: Get external antenna info for both interfaces
+suite: integration
+story: STORY-003
+priority: 3
+timeout: 30000
+dependencies: []
+
+steps:
+  - name: Call getExternalAntennaInfo
+    command: npx tsx cicd/tests/src/mcp-client.ts getExternalAntennaInfo
+    expectPatterns:
+      - "wifi|antenna|Error getting external antenna"
+    rejectPatterns:
+      - "Unknown tool"
+
+criteria: |
+  Verify getExternalAntennaInfo either:
+  - Returns structured JSON with wifi0/wifi1 antenna mode and gain, OR
+  - Returns a graceful error if the AP model doesn't support external antennas
+  - Must not crash or return "Unknown tool"

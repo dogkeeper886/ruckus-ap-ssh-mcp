@@ -1,0 +1,28 @@
+# Test: getWiFiChannelInfo returns channel and band info
+id: TC-INT-008
+name: Get WiFi channel info with band detection
+suite: integration
+story: STORY-005
+priority: 5
+timeout: 30000
+dependencies: []
+
+steps:
+  - name: Call getWiFiChannelInfo
+    command: npx tsx cicd/tests/src/mcp-client.ts getWiFiChannelInfo
+    expectPatterns:
+      - "wifi0"
+      - "wifi1"
+      - "channel"
+      - "band"
+      - "radioEnabled"
+    rejectPatterns:
+      - "Error getting WiFi channel"
+      - "isError"
+
+criteria: |
+  Verify getWiFiChannelInfo returns structured JSON with:
+  - wifi0 and wifi1 objects (wifi2 optional)
+  - Each containing radioEnabled, channel, status, band fields
+  - Band detected from frequency (2.4GHz, 5GHz, or 6GHz)
+  - No error responses

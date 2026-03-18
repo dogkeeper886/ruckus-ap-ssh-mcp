@@ -1,0 +1,25 @@
+# Test: getSerialNumber returns model and serial
+id: TC-INT-004
+name: Get AP serial number and model info
+suite: integration
+story: STORY-001
+priority: 1
+timeout: 30000
+dependencies: []
+
+steps:
+  - name: Call getSerialNumber
+    command: npx tsx cicd/tests/src/mcp-client.ts getSerialNumber
+    expectPatterns:
+      - "model"
+      - "serial"
+      - "\\d{6,}"
+    rejectPatterns:
+      - "Error getting serial number"
+      - "isError"
+
+criteria: |
+  Verify getSerialNumber returns structured JSON with:
+  - A "model" field containing AP model name
+  - A "serial" field containing numeric serial number (6+ digits)
+  - No error responses

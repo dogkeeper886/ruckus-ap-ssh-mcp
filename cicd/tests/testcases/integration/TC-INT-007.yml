@@ -1,0 +1,27 @@
+# Test: getClientAdmissionControl returns config
+id: TC-INT-007
+name: Get client admission control configuration
+suite: integration
+story: STORY-004
+priority: 4
+timeout: 30000
+dependencies: []
+
+steps:
+  - name: Call getClientAdmissionControl
+    command: npx tsx cicd/tests/src/mcp-client.ts getClientAdmissionControl
+    expectPatterns:
+      - "wifi0"
+      - "wifi1"
+      - "enabled"
+      - "radioLoadThreshold"
+      - "clientCountThreshold"
+    rejectPatterns:
+      - "Error getting client admission"
+      - "isError"
+
+criteria: |
+  Verify getClientAdmissionControl returns structured JSON with:
+  - wifi0 and wifi1 objects
+  - Each containing enabled, radioLoadThreshold, clientCountThreshold, clientThroughputThreshold
+  - No error responses

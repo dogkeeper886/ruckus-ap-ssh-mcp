@@ -27,4 +27,4 @@ Provide an MCP tool that retrieves client admission control configuration for bo
 - Created: 2026-03-18
 - Implemented: yes
 - Tasks: none
-- Tests: none
+- Tests: TC-INT-007

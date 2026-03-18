@@ -28,4 +28,4 @@ Provide an MCP tool that runs the ACX status command on a Ruckus AP and returns 
 - Created: 2026-03-18
 - Implemented: yes
 - Tasks: none
-- Tests: none
+- Tests: TC-INT-005

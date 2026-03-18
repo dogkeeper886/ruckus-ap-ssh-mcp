@@ -29,4 +29,4 @@ Provide an MCP tool that connects to a Ruckus AP over SSH and extracts the seria
 - Created: 2026-03-18
 - Implemented: yes
 - Tasks: none
-- Tests: none
+- Tests: TC-INT-004

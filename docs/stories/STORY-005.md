@@ -33,4 +33,4 @@ Provide an MCP tool that queries all WiFi interfaces (wifi0, wifi1, wifi2) and r
 - Created: 2026-03-18
 - Implemented: yes
 - Tasks: none
-- Tests: none
+- Tests: TC-INT-008
