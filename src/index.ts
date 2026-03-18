@@ -24,6 +24,7 @@ import { getACXStatus } from './tools/getACXStatus.js';
 import { getExternalAntennaInfo } from './tools/getExternalAntennaInfo.js';
 import { getClientAdmissionControl } from './tools/getClientAdmissionControl.js';
 import { getWiFiChannelInfo } from './tools/getWiFiChannelInfo.js';
+import { runCommand } from './tools/runCommand.js';
 
 const server = new Server({
   name: 'ruckus-ap-ssh-mcp',
@@ -80,6 +81,20 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         properties: {},
         required: []
       }
+    },
+    {
+      name: 'runCommand',
+      description: 'Execute an arbitrary rkscli command on the Ruckus AP via SSH and return raw output',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          command: {
+            type: 'string',
+            description: 'The rkscli command to execute (e.g., "get devicename", "get boarddata", "get wlanlist")'
+          }
+        },
+        required: ['command']
+      }
     }
   ]
 }));
@@ -99,6 +114,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return await getClientAdmissionControl();
       case 'getWiFiChannelInfo':
         return await getWiFiChannelInfo();
+      case 'runCommand':
+        return await runCommand((request.params.arguments as { command?: string })?.command || '');
       default:
         throw new Error(`Unknown tool: ${name}`);
     }
