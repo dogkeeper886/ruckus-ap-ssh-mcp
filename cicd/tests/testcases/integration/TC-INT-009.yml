@@ -1,0 +1,30 @@
+# Test: getWlanInfo returns structured WLAN details
+id: TC-INT-009
+name: Get WLAN interface info with structured output
+suite: integration
+story: STORY-007
+priority: 6
+timeout: 30000
+dependencies: []
+
+steps:
+  - name: Call getWlanInfo
+    command: npx tsx cicd/tests/src/mcp-client.ts getWlanInfo
+    expectPatterns:
+      - "ssid"
+      - "bssid"
+      - "channel"
+      - "security"
+      - "auth"
+      - "cipher"
+      - "firewallProfile"
+      - "wlan"
+    rejectPatterns:
+      - "Error getting WLAN info"
+      - "isError"
+
+criteria: |
+  Verify getWlanInfo returns structured JSON with:
+  - At least one WLAN entry (wlanN key)
+  - Each entry contains ssid, bssid, channel, security, auth, cipher, firewallProfile
+  - No error responses

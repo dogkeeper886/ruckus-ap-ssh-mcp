@@ -30,4 +30,4 @@ Add a dedicated MCP tool that executes `get wlaninfo` on the Ruckus AP and retur
 
 - Created: 2026-03-18
 - Tasks: #5
-- Tests: none
+- Tests: TC-INT-009
