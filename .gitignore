@@ -10,3 +10,5 @@ dist/
 .bmad-core/
 .claude/
 cicd/results/
+docs/session_summaries/
+docs/evolve/

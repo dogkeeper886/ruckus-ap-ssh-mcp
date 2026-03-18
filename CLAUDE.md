@@ -102,7 +102,7 @@ Use these commands at end of session or periodically:
 
 ## Adding a New MCP Tool
 
-Follow this pattern when adding a new tool:
+**Always create a story first** — even if a GitHub issue already exists. The story file is the single source of truth that links tasks, implementation, and tests.
 
 1. **Create story:** `/dev-story` with the feature description
 2. **Create tasks:** `/dev-tasks STORY-XXX`
@@ -160,6 +160,8 @@ steps:
 criteria: |
   What this test verifies in plain language.
 ```
+
+**Important:** `mcp-client.ts` returns double-encoded JSON (the tool's JSON is inside a `text` field). Use bare strings in patterns (e.g., `model`, `serial`) — not quoted forms like `'"model"'` which won't match the escaped output `\"model\"`.
 
 ## MCP Tools Available
 
