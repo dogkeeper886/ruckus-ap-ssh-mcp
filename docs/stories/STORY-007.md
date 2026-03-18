@@ -12,13 +12,13 @@ Add a dedicated MCP tool that executes `get wlaninfo` on the Ruckus AP and retur
 
 ## Acceptance Criteria
 
-- [ ] Tool executes `get wlaninfo` via `executeSSHCommand()`
-- [ ] Parses raw output into structured JSON per WLAN interface
-- [ ] Each WLAN entry includes: ssid, bssid, channel, security, auth, cipher, firewallProfile
-- [ ] Handles APs with varying numbers of WLANs (single, multiple, none)
-- [ ] Returns error response on failure without crashing
-- [ ] Type defined in `src/types.ts`
-- [ ] Registered in `src/index.ts` (ListTools + CallTool)
+- [x] Tool executes `get wlaninfo` via `executeSSHCommand()`
+- [x] Parses raw output into structured JSON per WLAN interface
+- [x] Each WLAN entry includes: ssid, bssid, channel, security, auth, cipher, firewallProfile
+- [x] Handles APs with varying numbers of WLANs (single, multiple, none)
+- [x] Returns error response on failure without crashing
+- [x] Type defined in `src/types.ts`
+- [x] Registered in `src/index.ts` (ListTools + CallTool)
 
 ## Technical Notes
 

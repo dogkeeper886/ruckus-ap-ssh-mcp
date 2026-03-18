@@ -25,6 +25,7 @@ import { getExternalAntennaInfo } from './tools/getExternalAntennaInfo.js';
 import { getClientAdmissionControl } from './tools/getClientAdmissionControl.js';
 import { getWiFiChannelInfo } from './tools/getWiFiChannelInfo.js';
 import { runCommand } from './tools/runCommand.js';
+import { getWlanInfo } from './tools/getWlanInfo.js';
 
 const server = new Server({
   name: 'ruckus-ap-ssh-mcp',
@@ -83,6 +84,15 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       }
     },
     {
+      name: 'getWlanInfo',
+      description: 'Get WLAN interface details including SSID, BSSID, channel, security, auth, cipher, and firewall profile for all configured WLANs',
+      inputSchema: {
+        type: 'object',
+        properties: {},
+        required: []
+      }
+    },
+    {
       name: 'runCommand',
       description: 'Execute an arbitrary rkscli command on the Ruckus AP via SSH and return raw output',
       inputSchema: {
@@ -114,6 +124,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         return await getClientAdmissionControl();
       case 'getWiFiChannelInfo':
         return await getWiFiChannelInfo();
+      case 'getWlanInfo':
+        return await getWlanInfo();
       case 'runCommand':
         return await runCommand((request.params.arguments as { command?: string })?.command || '');
       default:

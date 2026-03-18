@@ -66,3 +66,17 @@ export interface WiFiChannelInfo {
     band?: string; // 6GHz or second 5GHz
   };
 }
+
+export interface WlanInterfaceInfo {
+  ssid: string;
+  bssid: string;
+  channel: number | null;
+  security: string;
+  auth: string;
+  cipher: string;
+  firewallProfile: string | null;
+}
+
+export interface WlanInfo {
+  [wlanName: string]: WlanInterfaceInfo;
+}
