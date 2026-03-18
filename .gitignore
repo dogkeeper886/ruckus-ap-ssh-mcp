@@ -9,3 +9,4 @@ dist/
 .idea/
 .bmad-core/
 .claude/
+cicd/results/
