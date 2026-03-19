@@ -172,6 +172,7 @@ criteria: |
 | `getExternalAntennaInfo` | External antenna mode/gain for WiFi interfaces | STORY-003 | TC-INT-006 |
 | `getClientAdmissionControl` | Client admission control config per radio | STORY-004 | TC-INT-007 |
 | `getWiFiChannelInfo` | WiFi channel info with frequency-based band detection | STORY-005 | TC-INT-008 |
+| `getWlanList` | List all configured WLANs with status, SSID, BSSID, radio | STORY-009 | — |
 | `runCommand` | Execute arbitrary rkscli command, return raw output | STORY-006 | TC-INT-001/002/003 |
 
 ## Environment

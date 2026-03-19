@@ -102,3 +102,13 @@ export interface WlanScheduleEntry {
 export interface WlanSchedulerInfo {
   [wlanName: string]: WlanScheduleEntry;
 }
+
+export interface WlanListEntry {
+  name: string;
+  status: 'up' | 'down';
+  type: string;
+  wlanID: string;
+  radioID: number;
+  bssid: string;
+  ssid: string;
+}
