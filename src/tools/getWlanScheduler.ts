@@ -7,12 +7,12 @@ function hexToStatus(hex: string): string {
   const val = parseInt(hex, 16);
   if (val === 0xF) return 'on';
   if (val === 0x0) return 'off';
-  // Decode individual quarters: bit3=Q1, bit2=Q2, bit1=Q3, bit0=Q4
+  // Decode individual quarters (LSB-first): bit0=Q1(:00), bit1=Q2(:15), bit2=Q3(:30), bit3=Q4(:45)
   const quarters = [
-    (val >> 3) & 1 ? 'on' : 'off',
-    (val >> 2) & 1 ? 'on' : 'off',
-    (val >> 1) & 1 ? 'on' : 'off',
     val & 1 ? 'on' : 'off',
+    (val >> 1) & 1 ? 'on' : 'off',
+    (val >> 2) & 1 ? 'on' : 'off',
+    (val >> 3) & 1 ? 'on' : 'off',
   ];
   return quarters.join('/');
 }
